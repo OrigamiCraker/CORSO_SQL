@@ -12,28 +12,24 @@
 
 INSERT INTO clienti (id_cliente, denominazione, p_iva, indirizzo, telefono) -- l'ordine è importante
 VALUES (0, "Xyz Impienti", "IT123456789", "Via Roma, Cesena", "0434567890"); -- L'ordinamento dell'inserimento dei dati si basa sull'ordine delle colonne richieste
-/*
-l'algoritmo viene eseguito in loop per controllare se sono stati eseguiti dei cambiamenti sulla tabella per delle commesse urgenti giornaliere
-in base un valore che imposterò dal database, ma dovrà essere eseguito settimanalmente per programmare di settimana in settimana 
 
-- L'algoritmo scarica i dati da delle tabelle: tabella risorse e tabella commesse
-- successivamente ordina tutte le commesse in ordine di data,d alla più vicina alla più lontana: sarà il nostro ordine priroritario
-- Seguendo l'ordine della nuova tabella ordinata delle commesse controlla tra le risorse 
-    - Chi è disponibile in quel settimana
-    - Controlla chi è disponibile in quel giorno preciso e che non  sia impegnato in un altor lavoro
-    - Controlla se l'operatore ha ore settimanali disponibili per le ore richieste per la commessa 
-    - Controlla tra le varie scelte chi è più idoneo, ossia chi ha più ore all'attivo in base alla necessità della commessa controllando(ad esempio
-      se l'operatore uno ha eseguito più ore di manutenzione e la commessa necessita di questo allora sceglie l'operatore)
-- Crea/aggiorna una nuova tabella, tabella RIS_COMM, che conterrà l'id della commessa, la data di fine, id operatore e nome operatore
-    -  nel processo imposta il valore is_working dell'operatore a false, rendendolo non disponibile, e dalla tabella risorse toglie la commessa
+-- Ora non potrmo reinserire il numeor 0 come primary key, inoltre p_iva è anche unique, quindi non pò essere riutilizzato in un'altra riga
 
-- nel frattempo rimane in ascolto sulla tabella RIS_COMM PER EVENTUALI CAMBIAMENTI: quando il lavoro viene concluso allora la tabella verrà cambiata in remoto. Al verificarsi
-  di questa possibilità allora toglie la commessa definitivamente dalla tabella, riprsitina lo stato is_working in True e toglie le ore settimanali disponibili
-- al reinserimento dell'operatore nel database riavvia il loop, cercando se è necessario inserirlo in un altro lavovro o no.
+INSERT INTO clienti (id_cliente, denominazione, p_iva, indirizzo, telefono)
+VALUES (1, "Abc Servizi Casa", "IT12345000", "Via Cesena, Roma", "0434 552533");
 
-REGOLE:
-- L'operatore deve essere riassegnato allo stesso lavoro il giorno successivo se non viene completato il giorno stesso
-- l'operatore deve temrinare la giornata lavorativa nell'ultma sede assegnata
-- ore disponibili settimanali e feriali da inserire nell'algoritmo
+-- Utoincrement: abbiamo fino ad ora utilizzato l'inserimento a mano nella nostra primary key!
+-- Cos'è l'AUTO_INCREMENT?Incrementa manualmente un valore mano a mano che inserisco
 
-*/
+INSERT INTO clienti (denominazione, p_iva, indirizzo, telefono) -- posso ora togliere l'id cliente, siccome essendo autoincrement nella tabella aumenterà da solo
+VALUES ("Xyz Impienti", "IT123456789", "Via Roma, Cesena", "0434567890");
+
+
+-- Inserimenti multipli
+-- Possiamo inserire diversi dati uno dopo l'altro con la seguente dicituram dove ogni () determina una nuova riga
+INSERT INTO clienti (denominazione, p_iva, indirizzo, telefono) 
+VALUES 
+("Giardinaggio aggio","IT8584631207", "Via Interna, Udine", "04341357896"),
+("Piva Commercialista", "IT122258768", "Viale Libertà, Treviso", "0438648249"),
+("Case & Case", "IT098765432", "Viale Venezia, Pordenone", "04386548513"),
+("Ristorante buono", "IT392024893", "Via Cagliari, Milano", "0465246851");
