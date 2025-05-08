@@ -83,14 +83,14 @@ CREATE TABLE IF NOT EXISTS rapporto_clienti (
 -- VARIANTE MIDALI
 
 CREATE TABLE IF NOT EXISTS rapporto_clienti(
-  id_rapporto INT NOT NULL,
+  id_rapporto INT NOT NULL AUTO_INCREMENT,
   id_cliente INT NOT NULL,
   id_dipendente INT NOT NULL,
   PRIMARY KEY (id_rapporto)
 );
 
 CREATE TABLE IF NOT EXISTS dipendenti(
-  id_dipendente INT UNSIGNED NOT NULL REFERENCES rapporto_clienti(id_dipendente),
+  id_dipendente INT UNSIGNED NOT NULL AUTO_INCREMENT REFERENCES rapporto_clienti(id_dipendente),
   nome VARCHAR(100),
   cognome VARCHAR(100) NOT NULL,
   data_assunzione DATE NOT NULL,
@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS dipendenti(
 );
 
 CREATE TABLE IF NOT EXISTS clienti(
-  id_cliente INT UNSIGNED NOT NULL REFERENCES rapporto_clienti(id_cliente),
+  id_cliente INT UNSIGNED NOT NULL AUTO_INCREMENT REFERENCES rapporto_clienti(id_cliente),
   denominazione VARCHAR(255) NOT NULL,
   p_iva VARCHAR(16) NOT NULL UNIQUE,
   indirizzo VARCHAR(255) NOT NULL,
@@ -109,6 +109,9 @@ CREATE TABLE IF NOT EXISTS clienti(
   PRIMARY KEY (id_cliente)
 );
 
+
+
+DROP TABLE rapport_clienti, dipendenti, clienti; -- Elimina tutte le tabelle divise da virgola!
 
 
 
