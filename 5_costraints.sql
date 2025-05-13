@@ -82,11 +82,18 @@ CREATE TABLE IF NOT EXISTS rapporto_clienti (
 
 -- VARIANTE MIDALI
 
-CREATE TABLE IF NOT EXISTS rapporto_clienti(
+CREATE TABLE IF NOT EXISTS rapporto_clienti (
   id_rapporto INT NOT NULL AUTO_INCREMENT,
   id_cliente INT NOT NULL,
-  id_dipendente INT NOT NULL,
-  PRIMARY KEY (id_rapporto)
+  id_dipendente INT UNSIGNED NOT NULL,
+  PRIMARY KEY (id_rapporto),
+  FOREIGN KEY (id_dipendente) REFERENCES dipendenti_v2(id_dipendente)
+);
+
+CREATE TABLE IF NOT EXISTS uffici( -- da creare prima delle tabelle la quael dopo inserisco referenze
+  id_ufficio INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  nome_ufficio VARCHAR(35) NOT NULL,
+  PRIMARY KEY (id_ufficio),
 );
 
 CREATE TABLE IF NOT EXISTS dipendenti(
@@ -109,10 +116,61 @@ CREATE TABLE IF NOT EXISTS clienti(
   PRIMARY KEY (id_cliente)
 );
 
+CREATE TABLE IF NOT EXISTS dipendenti_v2 (
+  id_dipendente INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  nome VARCHAR(35),
+  data_assunzione DATE NOT NULL,
+  stipendio DECIMAL(7,2) NOT NULL CHECK (stipendio >= 1200 AND stipendio <= 5000),
+  telefono VARCHAR(10) NOT NULL UNIQUE,
+  id_ufficio INT UNSIGNED,
+  PRIMARY KEY (id_dipendente),
+  FOREIGN KEY (id_ufficio) REFERENCES uffici(id_ufficio)
+);
+
 
 
 DROP TABLE rapport_clienti, dipendenti, clienti; -- Elimina tutte le tabelle divise da virgola!
 
 
 
+-- ALTRA VARIANTE PER NUOVO DATABASE
 
+-- 1. Creazione tabella uffici (deve esistere prima per la FK in dipendenti)
+CREATE TABLE IF NOT EXISTS uffici (
+  id_ufficio INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  nome_ufficio VARCHAR(35) NOT NULL,
+  PRIMARY KEY (id_ufficio)
+);
+
+-- 2. Creazione tabella dipendenti con nome unico
+CREATE TABLE IF NOT EXISTS dipendenti (
+  id_dipendente INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  nome VARCHAR(100) NOT NULL UNIQUE, -- nome + cognome, unico
+  data_assunzione DATE NOT NULL,
+  stipendio DECIMAL(7, 2) NOT NULL CHECK (stipendio >= 1200 AND stipendio <= 5000), 
+  telefono VARCHAR(10) NOT NULL UNIQUE,
+  mansione VARCHAR(255) NOT NULL DEFAULT 'impiegato',
+  id_ufficio INT UNSIGNED,
+  PRIMARY KEY (id_dipendente),
+  FOREIGN KEY (id_ufficio) REFERENCES uffici(id_ufficio)
+);
+
+-- 3. Creazione tabella clienti
+CREATE TABLE IF NOT EXISTS clienti (
+  id_cliente INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  denominazione VARCHAR(255) NOT NULL,
+  p_iva VARCHAR(16) NOT NULL UNIQUE,
+  indirizzo VARCHAR(255) NOT NULL,
+  telefono VARCHAR(10) NOT NULL UNIQUE,
+  PRIMARY KEY (id_cliente)
+);
+
+-- 4. Creazione tabella di relazione rapporto_clienti
+CREATE TABLE IF NOT EXISTS rapporto_clienti (
+  id_rapporto INT NOT NULL AUTO_INCREMENT,
+  id_cliente INT UNSIGNED NOT NULL,
+  id_dipendente INT UNSIGNED NOT NULL,
+  PRIMARY KEY (id_rapporto),
+  FOREIGN KEY (id_cliente) REFERENCES clienti(id_cliente),
+  FOREIGN KEY (id_dipendente) REFERENCES dipendenti(id_dipendente)
+);
